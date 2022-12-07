@@ -3,25 +3,38 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p/core/host"
-	"strings"
 )
 
+func createNode (addressesString string) host.Host {
+	node, error := libp2p.New(libp2p.ListenAddrStrings(addressesString))
+	if error != nil {
+		panic(error)
+	}
+
+	return node
+}
+
 func createSourceNode() host.Host {
-	// TO BE IMPLEMENTED
+	return createNode("/ip4/0.0.0.0/tcp/7777")
 }
 
 func createTargetNode() host.Host {
-	// TO BE IMPLEMENTED
+	return createNode("/ip4/0.0.0.0/tcp/8888")
 }
 
 func connectToTargetNode(sourceNode host.Host, targetNode host.Host) {
-	// TO BE IMPLEMENTED
+	error := sourceNode.Connect(context.Background(), *host.InfoFromHost(targetNode))
+	if error != nil {
+		panic(error)
+	}
 }
 
 func countSourceNodePeers(sourceNode host.Host) int {
-	// TO BE IMPLEMENTED
+	return len(sourceNode.Network().Peers())
 }
 
 func printNodeID(host host.Host) {
